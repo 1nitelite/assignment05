@@ -32,7 +32,7 @@ while True:
             print(f"{key} | {value}")
     # option 2: add new album
     elif user_input == '2':
-        album_id = random.randint(1000, 9999)
+        album_id = str(random.randint(1000, 9999))
         artist_name = input('Enter Artist Name: ')
         album_name = input('Enter Album Name: ')
         album_year = input('Enter Release Year (n/a if unknown): ')
@@ -40,15 +40,14 @@ while True:
     # option 3: delete album from inventory
     elif user_input == '3':
         del_album = input('Please enter album ID: ')
-        # try:
         for key in cd_data.keys():
-            print(key)
-            if del_album == key:
-                del cd_data[key]
-                print(cd_data)
-            else:
-                print(cd_data)
+            #if/el statement for checking to see if user inputs only numbers
+            if key == del_album:
+                print("Album", cd_data[del_album], "will now be deleted")
+                cd_data.pop(del_album)
                 break
+            #
+
     # option 4: save data to file cd_inventory.txt
     # elif user_input == '4':
     #     del cd_data['ID']
