@@ -7,7 +7,6 @@ NToulas, 2022-May-17, Created File
 
 cd_data = {}
 cd_row = {}
-obj_file = None
 cd_file = 'cd_inventory.txt'
 
 ALBUM_ID_INDEX = 0
@@ -25,13 +24,16 @@ while True:
 
     # option 1: display current inventory
     if user_input == '1':
-        obj_file = open(cd_file, 'r')
-        for row in obj_file:
-            cd_row = row.strip().split(',')
-            cd_data[cd_row[ALBUM_ID_INDEX]] = [cd_row[ARTIST_NAME_INDEX], cd_row[ALBUM_NAME_INDEX]]
-        obj_file.close()
-        for key, value in cd_data.items():
-            print(f"{key} | {value}")
+        try:
+            with open(cd_file, 'r') as file:
+                for row in file:
+                    cd_row = row.strip().split(',')
+                    cd_data[cd_row[ALBUM_ID_INDEX]] = [cd_row[ARTIST_NAME_INDEX], cd_row[ALBUM_NAME_INDEX]]
+        except FileNotFoundError as error:
+            print("Inventory is currently empty.")
+        for key, values in cd_data.items():
+            artist, album = values
+            print(f"{key} | {album} by {artist}")
 
     # option 2: add new album
     elif user_input == '2':
@@ -45,17 +47,19 @@ while True:
     # option 3: delete album from inventory
     elif user_input == '3':
         del_album = input('Please enter album ID: ')
-        for key in cd_data.keys():
+        for key, values in cd_data.items():
             if key == del_album:
-                print("Album", cd_data[del_album], "will now be deleted.")
+                artist, album = values
+                print(f"{album} by {artist} will now be deleted.")
                 cd_data.pop(del_album)
                 break
 
     # option 4: save data to file cd_inventory.txt
     elif user_input == '4':
-         with open(cd_file, 'a') as file:
+         with open(cd_file, 'w+') as file:
             for key, values in cd_data.items():
-                file.write(f"\n{key},{values}")
+                artist, album = values
+                file.write(f"{key},{artist},{album}\n")
          print('Successfully saved!')
 
     # option 5: exit program
